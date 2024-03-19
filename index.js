@@ -36,6 +36,16 @@ async function run() {
     const appointmentCollection = client
       .db("diagnosticCenterDB")
       .collection("myAppointments");
+    const bannerCollection = client
+      .db("diagnosticCenterDB")
+      .collection("banners");
+
+      app.get("/banners", async (req, res) => {
+        // console.log(req.headers)
+        const cursor = bannerCollection.find();
+        const result = await cursor.toArray();
+        res.send(result);
+      });
 
       app.get("/users", async (req, res) => {
         // console.log(req.headers)
@@ -92,6 +102,20 @@ app.delete('/myAppointments/:id', async(req, res)=> {
   const id = req.params.id;
   const query = {_id: new ObjectId(id)}
   const result = await appointmentCollection.deleteOne(query);
+  res.send(result);
+});
+
+    
+app.post('/allTests', async(req, res)=> {
+  const newTest = req.body;
+  console.log(newTest)
+  const result = await testCollection.insertOne(newTest);
+  res.send(result);
+});
+app.post('/banners', async(req, res)=> {
+  const newBanner = req.body;
+  console.log(newBanner)
+  const result = await bannerCollection.insertOne(newBanner);
   res.send(result);
 });
 
